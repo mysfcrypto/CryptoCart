@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Advanced_Ecommerce.Models.Dto.CategoryDto>
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+<div class="row">
+    @Html.ActionLink("Create New", "CreateCategory", null, new { @class = "btn btn-primary" })
+</div>
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.Any())
+        {
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Category Image</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@item.Id</th>
+                        <td><img alt="category" class="w-50 h-50" src="data:image/*;base64,@(item.CategoryImage)" /></td>
+                        <td>@item.CategoryName <span class="badge badge-pill badge-primary">@item.ProductCount</span></td>
+                        <td>
+                                <form asp-action="DeleteCategory" method="post">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                </form>
+
+                            <a asp-action="UpdateCategory" asp-route-id="@item.Id" class="btn btn-outline-warning">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        }
+        else
+        {
+            <h3>Looks like here is no categories :(</h3>
+        }
+    </div>
+    
+</div>

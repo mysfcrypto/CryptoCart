@@ -1,0 +1,133 @@
+﻿@model Advanced_Ecommerce.Models.ViewModels.ProductIndexViewModel
+@{
+    ViewData["Title"] = "ProductPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Basic styling */
+    .container-custom {
+        padding: 20px;
+    }
+
+    .header-section h1,
+    .related-products h2 {
+        margin-top: 0;
+        color: #333; /* subtle and professional color */
+    }
+
+    /* Improve spacing and card styling */
+    .card {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+    .card-img-top {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #eee; /* subtle separation */
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    /* Form and buttons styling */
+    .btn-cart .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .amount-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+        .amount-controls input {
+            text-align: center;
+            width: 50px;
+            margin: 0 5px;
+        }
+
+    /* Icons enhancement */
+    .fas {
+        cursor: pointer;
+        margin: 0 10px;
+    }
+</style>
+
+<div class="container-custom">
+    <div class="header-section">
+        <h1>@Model.LongDescrip</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="data:image/*;base64,@(Model.Image)" class="card-img-top" />
+        </div>
+        <div class="col-md-6">
+            <div class="description">
+                <p>@Model.LongDescrip</p>
+            </div>
+            <div class="category-text">
+                <p>Category: @Model.Category.Name</p>
+            </div>
+            <div class="in-stock">
+                <p>In stock: @Model.inStock</p>
+            </div>
+            <div class="price-text">
+                <p>@Model.Price$</p>
+            </div>
+            <form asp-controller="ShoppingCart" asp-action="Add" method="post" role="form">
+                <div class="amount-controls">
+                    <i class="fas fa-minus-circle" onclick="changeValue(document.getElementById('amount-input-'+@Model.Id.ToString()),document.getElementById('foodTotal-@(Model.GetHashCode())'), @Model.Amount, -1)"></i>
+                    <input id="amount-input-@Model.Id" asp-for="Amount" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    <i class="fas fa-plus-circle" onclick="changeValue(document.getElementById('amount-input-'+@Model.Id.ToString()),document.getElementById('foodTotal-@(Model.GetHashCode())'), @Model.Amount, 1)"></i>
+                </div>
+                <div class="btn-cart">
+                    <input value="Buy Now" type="submit" class="btn btn-success" asp-controller="ShoppingCart" asp-action="Add" asp-route-id="@Model.Id" asp-route-amount="@Model.Total.Replace("$","")" asp-route-returnUrl="@Context.Request.Path" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Related Products Section -->
+    <div class="related-products">
+        <h2>Related Products</h2>
+        <div class="row">
+            @foreach (var relatedProduct in Model.RelatedProducts)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="data:image/*;base64,@(relatedProduct.PreviewIage)" class="card-img-top" />
+                        <div class="card-body">
+                            <h5 class="card-title">@relatedProduct.ShortDescription</h5>
+                            <p class="card-text">@relatedProduct.LongDescription</p>
+                            <a href="@Url.Action("Index", "Product", new { id = relatedProduct.Id })" class="btn btn-primary">View Product</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function changeValue(inputElement, totalElement, total, modifier) {
+        // Parse the current value of the input
+        var currentValue = parseInt(inputElement.value);
+
+        // Check if the current value is a number
+        if (!isNaN(currentValue)) {
+            // Modify the value based on the passed modifier (1 or -1)
+            var newValue = currentValue + modifier;
+            newValue = Math.max(newValue, 0);
+
+            inputElement.value = newValue;
+        }
+    }
+</script>

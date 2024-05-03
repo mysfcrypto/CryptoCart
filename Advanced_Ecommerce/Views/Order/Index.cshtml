@@ -1,0 +1,26 @@
+﻿@model Advanced_Ecommerce.Models.ViewModels.OrderViewIndexModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div><h1>Select Payment Currency</h1></div>
+<div class="spacer-20"></div>
+<form asp-controller="Orders" asp-action="CreateInvoice" asp-route-paymentCurrency="" asp-route-totalSum="@Model.ShoppingCartIndexViewModel.ShoppingCartTotal" method="post" class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="paymentCurrency">Currency:</label>
+            <select id="paymentCurrency" name="paymentCurrency" class="form-control">
+                @foreach (var item in Model.Currencies)
+                {
+                    <option value="@item.Currency">@item.Currency</option>
+                }
+            </select>
+        </div>
+    </div>
+    
+    <div class="col-12 mt-3">
+        <input disabled type="text" name="totalSum" value="@Model.ShoppingCartIndexViewModel.ShoppingCartTotal" />
+        <button type="submit" class="btn btn-success">Create Invoice</button>
+    </div>
+</form>
