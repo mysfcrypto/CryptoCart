@@ -1,7 +1,7 @@
 
 # Crypto Cart
 
-Daldo yaha description.
+Cryptocart is my project name which is basically an prototype for ecommerce platfrom in which ML , DB and crypto payment gateway is integrated , there are two types of ML : recommendation of products and churn prediction of customer.    
 
 # Technologies
 
